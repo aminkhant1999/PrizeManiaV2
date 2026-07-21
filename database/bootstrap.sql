@@ -119,3 +119,95 @@ WHERE NOT EXISTS (SELECT 1 FROM prizes WHERE name='AirPods Pro 3');
 INSERT INTO draws(name,draw_date,ticket_price,status,opens_at,closes_at)
 SELECT 'July 2026 Draw','2026-07-31',10.00,'open','2026-07-01 00:00:00','2026-08-01 00:00:00'
 WHERE NOT EXISTS (SELECT 1 FROM draws WHERE draw_date='2026-07-31');
+
+-- Published sample results from the previous month. Every insert is guarded so
+-- repeated application starts preserve existing data without creating copies.
+INSERT INTO users(name,email,password_hash,role,wallet_balance)
+SELECT 'Bob Shopper','bob@test.local','$2b$12$LmfZG5T6wYAQnH6aOQZBfOqpaR1x8QvI1Zn5MNj9zdAtzq3wQCw6e','user',150.00
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE email='bob@test.local');
+
+INSERT INTO draws(name,draw_date,ticket_price,status,opens_at,closes_at,published_at)
+SELECT 'June 2026 Draw','2026-06-30',5.00,'published','2026-06-01 00:00:00','2026-07-01 00:00:00','2026-07-01 12:00:00'
+WHERE NOT EXISTS (SELECT 1 FROM draws WHERE draw_date='2026-06-30');
+
+UPDATE draws
+SET status='published', published_at=COALESCE(published_at,'2026-07-01 12:00:00')
+WHERE draw_date='2026-06-30';
+
+INSERT INTO purchases(user_id,draw_id,quantity,unit_price,total_amount)
+SELECT u.id,d.id,4,5.00,20.00
+FROM users u JOIN draws d ON d.draw_date='2026-06-30'
+WHERE u.email='bob@test.local'
+  AND NOT EXISTS (SELECT 1 FROM tickets WHERE ticket_number='PM-JUN26-0001');
+
+INSERT INTO tickets(draw_id,user_id,purchase_id,ticket_number)
+SELECT d.id,u.id,p.id,'PM-JUN26-0001'
+FROM users u
+JOIN draws d ON d.draw_date='2026-06-30'
+JOIN purchases p ON p.user_id=u.id AND p.draw_id=d.id
+WHERE u.email='bob@test.local'
+  AND NOT EXISTS (SELECT 1 FROM tickets WHERE ticket_number='PM-JUN26-0001')
+ORDER BY p.id DESC LIMIT 1;
+
+INSERT INTO tickets(draw_id,user_id,purchase_id,ticket_number)
+SELECT d.id,u.id,p.id,'PM-JUN26-0002'
+FROM users u
+JOIN draws d ON d.draw_date='2026-06-30'
+JOIN purchases p ON p.user_id=u.id AND p.draw_id=d.id
+WHERE u.email='bob@test.local'
+  AND NOT EXISTS (SELECT 1 FROM tickets WHERE ticket_number='PM-JUN26-0002')
+ORDER BY p.id DESC LIMIT 1;
+
+INSERT INTO tickets(draw_id,user_id,purchase_id,ticket_number)
+SELECT d.id,u.id,p.id,'PM-JUN26-0003'
+FROM users u
+JOIN draws d ON d.draw_date='2026-06-30'
+JOIN purchases p ON p.user_id=u.id AND p.draw_id=d.id
+WHERE u.email='bob@test.local'
+  AND NOT EXISTS (SELECT 1 FROM tickets WHERE ticket_number='PM-JUN26-0003')
+ORDER BY p.id DESC LIMIT 1;
+
+INSERT INTO tickets(draw_id,user_id,purchase_id,ticket_number)
+SELECT d.id,u.id,p.id,'PM-JUN26-0004'
+FROM users u
+JOIN draws d ON d.draw_date='2026-06-30'
+JOIN purchases p ON p.user_id=u.id AND p.draw_id=d.id
+WHERE u.email='bob@test.local'
+  AND NOT EXISTS (SELECT 1 FROM tickets WHERE ticket_number='PM-JUN26-0004')
+ORDER BY p.id DESC LIMIT 1;
+
+INSERT INTO winners(draw_id,prize_id,ticket_id,user_id)
+SELECT d.id,p.id,t.id,u.id
+FROM draws d
+JOIN prizes p ON p.name='iPhone 17 Pro Max'
+JOIN tickets t ON t.ticket_number='PM-JUN26-0001'
+JOIN users u ON u.email='bob@test.local'
+WHERE d.draw_date='2026-06-30'
+  AND NOT EXISTS (SELECT 1 FROM winners w WHERE w.draw_id=d.id AND w.prize_id=p.id);
+
+INSERT INTO winners(draw_id,prize_id,ticket_id,user_id)
+SELECT d.id,p.id,t.id,u.id
+FROM draws d
+JOIN prizes p ON p.name='Apple Watch Ultra'
+JOIN tickets t ON t.ticket_number='PM-JUN26-0002'
+JOIN users u ON u.email='bob@test.local'
+WHERE d.draw_date='2026-06-30'
+  AND NOT EXISTS (SELECT 1 FROM winners w WHERE w.draw_id=d.id AND w.prize_id=p.id);
+
+INSERT INTO winners(draw_id,prize_id,ticket_id,user_id)
+SELECT d.id,p.id,t.id,u.id
+FROM draws d
+JOIN prizes p ON p.name='PlayStation 5'
+JOIN tickets t ON t.ticket_number='PM-JUN26-0003'
+JOIN users u ON u.email='bob@test.local'
+WHERE d.draw_date='2026-06-30'
+  AND NOT EXISTS (SELECT 1 FROM winners w WHERE w.draw_id=d.id AND w.prize_id=p.id);
+
+INSERT INTO winners(draw_id,prize_id,ticket_id,user_id)
+SELECT d.id,p.id,t.id,u.id
+FROM draws d
+JOIN prizes p ON p.name='AirPods Pro 3'
+JOIN tickets t ON t.ticket_number='PM-JUN26-0004'
+JOIN users u ON u.email='bob@test.local'
+WHERE d.draw_date='2026-06-30'
+  AND NOT EXISTS (SELECT 1 FROM winners w WHERE w.draw_id=d.id AND w.prize_id=p.id);
