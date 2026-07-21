@@ -227,11 +227,16 @@ erDiagram
 - npm
 - MySQL 8 or later
 
-### 📦 Installation
+### 📥 Clone the repository
 
 ```bash
 git clone https://github.com/aminkhant1999/PrizeManiaV2.git
 cd PrizeManiaV2
+```
+
+### 📦 Install dependencies
+
+```bash
 npm install
 cp .env.example .env
 ```
