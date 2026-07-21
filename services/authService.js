@@ -1,0 +1,7 @@
+const bcrypt=require('bcryptjs');
+const userModel=require('../models/userModel');
+function normalizeEmail(value){return String(value||'').trim().toLowerCase();}
+function validateRegistration(input){const errors=[];const name=String(input.name||'').trim();const email=normalizeEmail(input.email);const password=String(input.password||'');if(name.length<2||name.length>100)errors.push('Name must be between 2 and 100 characters.');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))errors.push('Enter a valid email address.');if(password.length<10)errors.push('Password must contain at least 10 characters.');if(password!==String(input.passwordConfirmation||''))errors.push('Password confirmation does not match.');return{errors,name,email,password};}
+async function register(input){const v=validateRegistration(input);if(v.errors.length)return v;if(await userModel.findByEmail(v.email))return{...v,errors:['An account with that email already exists.']};const passwordHash=await bcrypt.hash(v.password,12);const id=await userModel.create({name:v.name,email:v.email,passwordHash});return{id,errors:[]};}
+async function authenticate(email,password,role){const user=await userModel.findByEmail(normalizeEmail(email));if(!user||user.role!==role||!await bcrypt.compare(String(password||''),user.password_hash))return null;return{id:user.id,name:user.name,email:user.email,role:user.role};}
+module.exports={normalizeEmail,validateRegistration,register,authenticate};

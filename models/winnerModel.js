@@ -1,0 +1,5 @@
+const db=require('../config/db');
+async function getPublishedWinners(){const [r]=await db.execute(`SELECT w.id winnerId,u.name winnerName,p.name prize,d.draw_date month,t.ticket_number ticketId FROM winners w JOIN users u ON u.id=w.user_id JOIN prizes p ON p.id=w.prize_id JOIN draws d ON d.id=w.draw_id JOIN tickets t ON t.id=w.ticket_id WHERE d.status='published' ORDER BY d.draw_date DESC,p.display_order`);return r;}
+async function forUser(userId){const [r]=await db.execute(`SELECT p.name prize,d.name draw_name,d.draw_date,t.ticket_number,w.selected_at FROM winners w JOIN prizes p ON p.id=w.prize_id JOIN draws d ON d.id=w.draw_id JOIN tickets t ON t.id=w.ticket_id WHERE w.user_id=? AND d.status='published' ORDER BY w.selected_at DESC`,[userId]);return r;}
+async function forDraw(drawId){const [r]=await db.execute(`SELECT w.*,u.name user_name,u.email,p.name prize_name,t.ticket_number FROM winners w JOIN users u ON u.id=w.user_id JOIN prizes p ON p.id=w.prize_id JOIN tickets t ON t.id=w.ticket_id WHERE w.draw_id=? ORDER BY p.display_order`,[drawId]);return r;}
+module.exports={getPublishedWinners,forUser,forDraw};

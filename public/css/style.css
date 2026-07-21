@@ -1,0 +1,123 @@
+:root {
+  --prizemania-surface: #f8f9fa;
+  --prizemania-border: #e9ecef;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible { outline: .2rem solid #ffc107; outline-offset: .15rem; }
+.auth-card { max-width: 36rem; }
+.balance-card { background: #0d6efd; color: #fff; min-width: 12rem; }
+.ticket-card { border-left: .35rem solid #0d6efd !important; }
+
+.hero-section {
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(13, 110, 253, 0.16),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      var(--prizemania-surface) 100%
+    );
+}
+
+.hero-card {
+  border: 1px solid var(--prizemania-border);
+}
+
+.hero-icon,
+.winner-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.hero-icon {
+  width: 3.25rem;
+  height: 3.25rem;
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #b58100;
+  font-size: 1.5rem;
+}
+
+.prize-card {
+  overflow: hidden;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.prize-card:hover {
+  transform: translateY(-0.3rem);
+}
+
+.prize-image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--prizemania-border);
+}
+
+.prize-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.winners-section {
+  background-color: #eef4ff;
+}
+
+.table-responsive {
+  border: 1px solid var(--prizemania-border);
+}
+
+.table th,
+.table td {
+  padding: 1rem 1.25rem;
+}
+
+.winner-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: rgba(13, 110, 253, 0.12);
+  color: #0d6efd;
+}
+
+.empty-state {
+  border: 1px solid var(--prizemania-border);
+}
+
+.navbar .nav-link.active {
+  font-weight: 600;
+}
+
+@media (max-width: 575.98px) {
+  .hero-section {
+    text-align: center;
+  }
+
+  .hero-section .d-flex {
+    justify-content: center;
+  }
+
+  .prize-image-wrapper {
+    height: 14rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.85rem;
+    white-space: nowrap;
+  }
+}

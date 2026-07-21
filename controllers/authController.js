@@ -1,0 +1,9 @@
+const authService=require('../services/authService');
+function showRegister(req,res){res.render('auth/register',{pageTitle:'Register | PrizeMania'});}
+async function register(req,res,next){try{const result=await authService.register(req.body);if(result.errors.length)return res.status(422).render('auth/register',{pageTitle:'Register | PrizeMania',errors:result.errors,old:{name:result.name,email:result.email}});req.flash('success','Account created. You can now sign in.');res.redirect('/login');}catch(e){if(e.code==='ER_DUP_ENTRY')return res.status(422).render('auth/register',{pageTitle:'Register | PrizeMania',errors:['An account with that email already exists.'],old:{name:req.body.name,email:req.body.email}});next(e);}}
+function showLogin(req,res){res.render('auth/login',{pageTitle:'Login | PrizeMania',admin:false});}
+function showAdminLogin(req,res){res.render('auth/login',{pageTitle:'Admin Login | PrizeMania',admin:true});}
+async function loginAs(role,req,res,next){try{const user=await authService.authenticate(req.body.email,req.body.password,role);if(!user)return res.status(401).render('auth/login',{pageTitle:role==='admin'?'Admin Login | PrizeMania':'Login | PrizeMania',admin:role==='admin',errors:['Invalid email or password.'],old:{email:req.body.email}});const returnTo=req.session.returnTo;req.session.regenerate((error)=>{if(error)return next(error);req.session.user=user;req.flash('success',`Welcome back, ${user.name}.`);res.redirect(returnTo&&returnTo.startsWith('/')?returnTo:(role==='admin'?'/admin':'/dashboard'));});}catch(e){next(e);}}
+const login=(req,res,next)=>loginAs('user',req,res,next);const adminLogin=(req,res,next)=>loginAs('admin',req,res,next);
+function logout(req,res,next){req.session.destroy((e)=>{if(e)return next(e);res.clearCookie('prizemania.sid');res.redirect('/');});}
+module.exports={showRegister,register,showLogin,showAdminLogin,login,adminLogin,logout};

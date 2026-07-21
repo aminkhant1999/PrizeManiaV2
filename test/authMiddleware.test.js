@@ -1,0 +1,3 @@
+const test=require('node:test');const assert=require('node:assert/strict');const {requireAdmin}=require('../middleware/authMiddleware');
+test('normal user is blocked from admin middleware',()=>{let redirected;const req={session:{user:{role:'user'}},originalUrl:'/admin',flash:()=>{}};const res={redirect:value=>{redirected=value;}};requireAdmin(req,res,()=>assert.fail('must not continue'));assert.equal(redirected,'/admin/login');});
+test('admin is allowed through admin middleware',()=>{let continued=false;requireAdmin({session:{user:{role:'admin'}}},{},()=>{continued=true;});assert.equal(continued,true);});

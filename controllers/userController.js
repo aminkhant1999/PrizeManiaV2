@@ -1,0 +1,5 @@
+const userModel=require('../models/userModel');const drawModel=require('../models/drawModel');const ticketModel=require('../models/ticketModel');const purchaseModel=require('../models/purchaseModel');const winnerModel=require('../models/winnerModel');
+async function dashboard(req,res,next){try{const [user,draw,tickets,purchases,wins]=await Promise.all([userModel.findById(req.session.user.id),drawModel.getOpen(),ticketModel.listForUser(req.session.user.id),purchaseModel.listForUser(req.session.user.id),winnerModel.forUser(req.session.user.id)]);res.render('user/dashboard',{pageTitle:'My Dashboard | PrizeMania',user,draw,tickets:tickets.slice(0,5),purchases:purchases.slice(0,5),wins});}catch(e){next(e);}}
+async function tickets(req,res,next){try{res.render('user/tickets',{pageTitle:'My Tickets | PrizeMania',tickets:await ticketModel.listForUser(req.session.user.id)});}catch(e){next(e);}}
+async function purchases(req,res,next){try{res.render('user/purchases',{pageTitle:'Purchase History | PrizeMania',purchases:await purchaseModel.listForUser(req.session.user.id)});}catch(e){next(e);}}
+module.exports={dashboard,tickets,purchases};

@@ -1,0 +1,2 @@
+const test=require('node:test');const assert=require('node:assert/strict');const {sampleWithoutReplacement}=require('../services/drawService');
+test('winner sampling does not select a ticket twice',()=>{const tickets=Array.from({length:10},(_,id)=>({id}));const picked=sampleWithoutReplacement(tickets,8,max=>max-1);assert.equal(new Set(picked.map(x=>x.id)).size,8);assert.equal(tickets.length,10);});

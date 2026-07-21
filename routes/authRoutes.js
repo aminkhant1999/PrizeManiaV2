@@ -1,0 +1,2 @@
+const express=require('express');const c=require('../controllers/authController');const {requireGuest}=require('../middleware/authMiddleware');const router=express.Router();
+router.get('/register',requireGuest,c.showRegister);router.post('/register',requireGuest,c.register);router.get('/login',requireGuest,c.showLogin);router.post('/login',requireGuest,c.login);router.get('/admin/login',requireGuest,c.showAdminLogin);router.post('/admin/login',requireGuest,c.adminLogin);router.post('/logout',c.logout);module.exports=router;
