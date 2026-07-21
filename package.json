@@ -4,7 +4,7 @@
   "description": "A secure portfolio lucky-draw application built with Express, EJS and MySQL",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node scripts/setupDatabase.js && node app.js",
     "dev": "nodemon app.js",
     "test": "node --test --test-concurrency=1"
   },
