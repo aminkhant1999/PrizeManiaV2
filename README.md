@@ -8,6 +8,20 @@ The project is a portfolio demonstration. Purchases use simulated wallet funds o
 
 [Open PrizeMania V2](https://prizemaniav2-production.up.railway.app)
 
+## Screenshots
+
+| Customer dashboard | Ticket purchase |
+| --- | --- |
+| ![Customer dashboard showing current draw, balance, tickets, and purchase history](docs/screenshots/customer-dashboard.png) | ![Ticket purchase form for the current draw](docs/screenshots/ticket-purchase.png) |
+
+| Purchased ticket | Admin dashboard |
+| --- | --- |
+| ![Customer ticket page showing a generated ticket number](docs/screenshots/purchased-ticket.png) | ![Administrator dashboard with application metrics and draw controls](docs/screenshots/admin-dashboard.png) |
+
+| Prize management | Purchase administration |
+| --- | --- |
+| ![Administrator prize management page](docs/screenshots/admin-prizes.png) | ![Administrator purchase records page](docs/screenshots/admin-purchases.png) |
+
 ## Core features
 
 ### Customer experience
@@ -58,6 +72,125 @@ views/        EJS pages and shared partials
 ```
 
 Controllers remain focused on HTTP concerns, models own database access, and services implement transactional business rules.
+
+## System diagrams
+
+These diagrams update the original project documentation to reflect the current Express MVC application, session security, transactional purchasing, and administrator-controlled draw lifecycle.
+
+### Application architecture
+
+```mermaid
+flowchart LR
+    Browser["Browser / EJS client"]
+
+    subgraph Express["Node.js + Express application"]
+        Security["Security middleware<br/>Helmet, sessions, CSRF, rate limiting"]
+        Routes["Public, auth, customer<br/>and admin routes"]
+        Controllers["Controllers"]
+        Services["Business services<br/>auth, tickets, draws"]
+        Models["Query models"]
+        Views["EJS views and partials"]
+    end
+
+    Database[("MySQL 8<br/>application data + sessions")]
+
+    Browser --> Security --> Routes --> Controllers
+    Controllers --> Services --> Models --> Database
+    Controllers --> Models
+    Controllers --> Views --> Browser
+```
+
+### Customer and administrator journeys
+
+```mermaid
+flowchart TB
+    Visit["Visit PrizeMania"] --> Register["Register customer account"]
+    Register --> Login["Sign in"]
+    Login --> Dashboard["View dashboard and open draw"]
+    Dashboard --> Purchase["Purchase 1-20 tickets"]
+    Purchase --> Transaction["Atomic wallet, purchase,<br/>and ticket transaction"]
+    Transaction --> History["View tickets and purchase history"]
+
+    AdminLogin["Administrator sign in"] --> AdminDashboard["Admin dashboard"]
+    AdminDashboard --> Manage["Manage prizes and draws"]
+    Manage --> Close["Close eligible draw"]
+    Close --> Select["Select winners with crypto.randomInt"]
+    Select --> Publish["Review and publish results"]
+    Publish --> Results["Display winners publicly"]
+    Results --> History
+```
+
+### Draw lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft: Create draw
+    Draft --> Open: Open sales
+    Open --> Closed: Close sales
+    Closed --> Open: Reopen before expiry<br/>and before winner selection
+    Closed --> Completed: Select winners atomically
+    Completed --> Published: Publish approved results
+    Published --> [*]
+```
+
+### Database relationships
+
+```mermaid
+erDiagram
+    USERS ||--o{ PURCHASES : makes
+    USERS ||--o{ TICKETS : owns
+    USERS ||--o{ WINNERS : receives
+    DRAWS ||--o{ PURCHASES : contains
+    DRAWS ||--o{ TICKETS : issues
+    DRAWS ||--o{ WINNERS : produces
+    PURCHASES ||--|{ TICKETS : creates
+    PRIZES ||--o{ WINNERS : awarded_as
+    TICKETS ||--o| WINNERS : selected_as
+
+    USERS {
+        int id PK
+        string email UK
+        string password_hash
+        enum role
+        decimal wallet_balance
+    }
+    DRAWS {
+        int id PK
+        date draw_date UK
+        decimal ticket_price
+        enum status
+        datetime opens_at
+        datetime closes_at
+        datetime published_at
+    }
+    PURCHASES {
+        bigint id PK
+        int user_id FK
+        int draw_id FK
+        int quantity
+        decimal total_amount
+    }
+    TICKETS {
+        bigint id PK
+        int draw_id FK
+        int user_id FK
+        bigint purchase_id FK
+        string ticket_number UK
+    }
+    PRIZES {
+        int id PK
+        string name
+        int display_order
+        boolean is_active
+    }
+    WINNERS {
+        bigint id PK
+        int draw_id FK
+        int prize_id FK
+        bigint ticket_id FK
+        int user_id FK
+    }
+```
 
 ## Business rules
 
