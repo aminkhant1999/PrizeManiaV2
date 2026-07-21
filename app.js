@@ -34,6 +34,7 @@ function createApp(options = {}) {
     res.locals.errors = [];
     next();
   });
+  app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
   app.use(csrfProtection);
   app.use('/', homeRoutes, pageRoutes);
   app.use('/', rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: 'draft-8', legacyHeaders: false }), authRoutes);
@@ -48,7 +49,7 @@ async function startServer() {
   try {
     await db.initializePool();
     const port = Number(process.env.PORT) || 3000;
-    createApp().listen(port, () => console.log(`PrizeMania is running at http://localhost:${port}`));
+    createApp().listen(port, '0.0.0.0', () => console.log(`PrizeMania is listening on 0.0.0.0:${port}`));
   } catch (error) {
     console.error('Unable to start PrizeMania due to database connection issues:', error.message);
     process.exitCode = 1;
