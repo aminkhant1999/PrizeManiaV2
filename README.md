@@ -4,11 +4,11 @@ PrizeMania V2 is a full-stack lucky-draw platform built with Node.js, Express, E
 
 The project is a portfolio demonstration. Purchases use simulated wallet funds only; it does not process real payments or store financial information.
 
-## Live application
+## 🌐 Live application
 
 [Open PrizeMania V2](https://prizemaniav2-production.up.railway.app)
 
-## Screenshots
+## 📸 Screenshots
 
 | Customer dashboard | Ticket purchase |
 | --- | --- |
@@ -22,9 +22,9 @@ The project is a portfolio demonstration. Purchases use simulated wallet funds o
 | --- | --- |
 | ![Administrator prize management page](docs/screenshots/admin-prizes.png) | ![Administrator purchase records page](docs/screenshots/admin-purchases.png) |
 
-## Core features
+## ✨ Core features
 
-### Customer experience
+### 👤 Customer experience
 
 - Account registration and secure sign-in
 - Dashboard with simulated wallet balance and current draw information
@@ -34,7 +34,7 @@ The project is a portfolio demonstration. Purchases use simulated wallet funds o
 - Published prize and winner history
 - Secure logout and session handling
 
-### Administration
+### 🛡️ Administration
 
 - Separate protected administrator sign-in
 - Dashboard metrics for users, tickets, purchases, prizes, and draws
@@ -45,7 +45,7 @@ The project is a portfolio demonstration. Purchases use simulated wallet funds o
 - Cryptographically secure winner selection without replacement
 - Explicit result publication before winners appear publicly
 
-## Technology
+## 🧰 Technology
 
 - Node.js and Express 5
 - EJS server-rendered templates
@@ -54,7 +54,7 @@ The project is a portfolio demonstration. Purchases use simulated wallet funds o
 - JavaScript and Node's built-in test runner
 - Railway for application and database hosting
 
-## Architecture
+## 🏗️ Architecture
 
 PrizeMania follows an MVC-oriented structure:
 
@@ -73,11 +73,11 @@ views/        EJS pages and shared partials
 
 Controllers remain focused on HTTP concerns, models own database access, and services implement transactional business rules.
 
-## System diagrams
+## 📐 System diagrams
 
 These diagrams update the original project documentation to reflect the current Express MVC application, session security, transactional purchasing, and administrator-controlled draw lifecycle.
 
-### Application architecture
+### 🧩 Application architecture
 
 ```mermaid
 flowchart LR
@@ -100,7 +100,7 @@ flowchart LR
     Controllers --> Views --> Browser
 ```
 
-### Customer and administrator journeys
+### 🔀 Customer and administrator journeys
 
 ```mermaid
 flowchart TB
@@ -120,7 +120,7 @@ flowchart TB
     Results --> History
 ```
 
-### Draw lifecycle
+### 🔄 Draw lifecycle
 
 ```mermaid
 stateDiagram-v2
@@ -133,7 +133,7 @@ stateDiagram-v2
     Published --> [*]
 ```
 
-### Database relationships
+### 🗄️ Database relationships
 
 ```mermaid
 erDiagram
@@ -192,7 +192,7 @@ erDiagram
     }
 ```
 
-## Business rules
+## 📋 Business rules
 
 - Only open, unexpired draws accept ticket purchases.
 - Ticket quantity is limited to 1-20 per purchase request.
@@ -205,7 +205,7 @@ erDiagram
 - Completed draws cannot be processed again.
 - Results remain private until an administrator publishes them.
 
-## Security
+## 🔐 Security
 
 - Password hashing with bcrypt cost factor 12
 - MySQL-backed sessions with HTTP-only, SameSite cookies
@@ -219,15 +219,15 @@ erDiagram
 - Generic authentication and database error responses
 - User-owned records scoped to the authenticated account
 
-## Local setup
+## 🚀 Local setup
 
-### Prerequisites
+### ✅ Prerequisites
 
 - Node.js 20 or later
 - npm
 - MySQL 8 or later
 
-### Installation
+### 📦 Installation
 
 ```bash
 git clone https://github.com/aminkhant1999/PrizeManiaV2.git
@@ -265,7 +265,7 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Development accounts
+## 👥 Development accounts
 
 The seed file creates local demonstration accounts:
 
@@ -276,7 +276,7 @@ The seed file creates local demonstration accounts:
 
 These credentials are intended only for development and portfolio demonstrations.
 
-## Commands
+## ⌨️ Commands
 
 ```bash
 npm start       # Start the application
@@ -286,7 +286,7 @@ npm test        # Run automated tests
 
 The repository also includes [MANUAL_TESTING.md](MANUAL_TESTING.md), covering the complete public, customer, and administrator journeys.
 
-## Testing
+## 🧪 Testing
 
 The automated suite covers validation, authentication behavior, authorization middleware, CSRF rejection, ticket quantity rules, ticket-number generation, winner sampling, public form rendering, health checks, and 404 handling.
 
@@ -294,7 +294,7 @@ The automated suite covers validation, authentication behavior, authorization mi
 npm test
 ```
 
-## Deployment
+## ☁️ Deployment
 
 The application is designed to run as a Node web service alongside MySQL. Production configuration is provided through environment variables; secrets and database credentials are never committed to the repository.
 
@@ -304,12 +304,12 @@ The deployed service exposes a lightweight health endpoint:
 GET /health
 ```
 
-## Project status
+## 📌 Project status
 
 PrizeMania V2 implements the complete demonstration workflow from registration and ticket purchase through administrator-managed draws, winner selection, and public result publication.
 
 Potential future enhancements include notification delivery, image uploads, audit-event history, pagination for large datasets, and expanded browser-level end-to-end coverage.
 
-## License
+## 📄 License
 
 This project is currently provided for portfolio and demonstration purposes.
