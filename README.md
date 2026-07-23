@@ -54,6 +54,17 @@ The project is a portfolio demonstration. Purchases use simulated wallet funds o
 - JavaScript and Node's built-in test runner
 - Railway for application and database hosting
 
+## 🤖 Agentic AI-assisted development
+
+Agentic AI was used as a development accelerator during the PrizeMania V2 rebuild. It supported:
+
+- Codebase exploration, debugging, and refactoring suggestions
+- Railway and MySQL deployment troubleshooting
+- Test-case development and regression checking
+- Technical documentation and README refinement
+
+All generated suggestions were reviewed before use. Architecture, database design, security decisions, feature behaviour, and final implementation choices remained developer-owned. Changes were validated through manual workflow testing and the automated test suite rather than accepted solely from AI output.
+
 ## 🏗️ Architecture
 
 PrizeMania follows an MVC-oriented structure:
